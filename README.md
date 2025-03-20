@@ -157,4 +157,5 @@ Messages, channels, and users for autoreply are stored in `config/config.json`:
 
 ## Credits
 This project is a restructured and improved version of the original [@humza1400](https://github.com/humza1400) SelfBot (2019).
+
 This project is another restructured and improved version of the previously improved version [@AstraaDev](https://github.com/AstraaDev) SelfBot (2024).
