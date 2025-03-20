@@ -1,9 +1,9 @@
-Discord SelfBot V1.2
+Discord SelfBot V1.2 (UPDATE SOON)
 
 
-<p align="center">
-  [Discord] - SelfBot is a feature-rich script designed for Windows, Linux, and macOS, written in Python.
-</p>
+
+Discord SelfBot is a feature-rich script designed for Windows, Linux, and macOS, written in Python.
+
 
 This SelfBot provides a large variety of commands to streamline your Discord experience. It features an intuitive interface, complete help documentation, and updates to keep it functional and efficient. Some unnecessary commands have been removed, but you are welcome to suggest additions via issues or Discord.
 
