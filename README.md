@@ -64,10 +64,10 @@ This SelfBot provides a large variety of commands to streamline your Discord exp
 
 ## How To Setup/Install
 
-1. **Update `config/config.json`**: Enter your bot token and preferred prefix.
+1. **Update `config/config.json`**: Enter your user token and preferred prefix.
 ```json
 {
-  // Your Discord bot token, required to log in to the bot account
+  // Your Discord user token, required to log in to the selfbot
   "token": "TOKEN-HERE",
   // Prefix used to trigger bot commands (e.g., "*help")
   "prefix": "PREFIX-HERE",
