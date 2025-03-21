@@ -1,0 +1,20 @@
+{
+    "token": "USER_TOKEN_HERE",
+    "prefix": "PREFIX_HERE",
+    "remote-users": ["USER_ID_HERE"],
+    "autoreply": {
+        "messages": [
+            "https://github.com/driizzyy",
+            "https://discord.gg/driizzyyboosts"
+        ],
+        "channels": ["", ""],
+        "users": ["", ""]
+    },
+    "afk": {
+        "enabled": false,
+        "message": "I am currently AFK. I will respond as soon as possible!"
+    },
+    "copycat": {
+        "users": ["", ""]
+    }
+}
