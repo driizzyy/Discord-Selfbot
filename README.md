@@ -1,4 +1,4 @@
-Discord SelfBot V1.2 (UPDATE SOON)
+Discord SelfBot V1.5 (UPDATED)
 
 
 
@@ -56,7 +56,14 @@ This SelfBot provides a large variety of commands to streamline your Discord exp
 `*airplane` - Sends a 9/11 attack (warning: use responsibly).  
 `*dick <@user>` - Show the "size" of a user's dick.  
 `*minesweeper <width> <height>` - Play a game of Minesweeper with custom grid size.  
-`*leetpeek <message>` - Speak like a hacker, replacing letters.  
+`*leetpeek <message>` - Speak like a hacker, replacing letters.
+`{prefix}say <message>` - Repeats what you type.
+`{prefix}userinfo <user_id>` - Pulls information about that user.
+`{prefix}roll` - Rolls a dice (1–6 by default or custom).
+`{prefix}weather <city>` - Checks the Weather in a specified city without an API key.
+`{prefix}choose` - Randomly picks one option from given choices.
+`{prefix}flip` - Flip a coin: Heads or Tails.
+`{prefix}github <username>` - Pulls various Github info about that user.
 
 </details>
 
