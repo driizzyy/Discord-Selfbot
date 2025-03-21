@@ -24,7 +24,7 @@ y = Fore.LIGHTYELLOW_EX
 b = Fore.LIGHTBLUE_EX
 w = Fore.LIGHTWHITE_EX
 
-__version__ = "1.5"
+__version__ = "1.6"
 
 discord_logger = logging.getLogger("discord")
 discord_logger.setLevel(logging.CRITICAL)
