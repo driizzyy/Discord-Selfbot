@@ -24,7 +24,7 @@ y = Fore.LIGHTYELLOW_EX
 b = Fore.LIGHTBLUE_EX
 w = Fore.LIGHTWHITE_EX
 
-__version__ = "1.5"
+__version__ = "1.6"
 
 discord_logger = logging.getLogger("discord")
 discord_logger.setLevel(logging.CRITICAL)
@@ -116,7 +116,7 @@ def selfbot_menu(bot):
 \t{y}[{w}#{y}]{w} Active Autoreply Users: {len(config["autoreply"]["users"])}\n
 \t{y}[{w}#{y}]{w} AFK Status: {'Enabled' if config["afk"]["enabled"] else 'Disabled'}
 \t{y}[{w}#{y}]{w} AFK Message: "{config["afk"]["message"]}"\n
-\t{y}[{w}#{y}]{w} Total Commands Loaded: 50\n\n
+\t{y}[{w}#{y}]{w} Total Commands Loaded: 60\n\n
 {y}[{Fore.GREEN}!{y}]{w} SelfBot is now online and ready!""")
 
 
@@ -201,14 +201,14 @@ async def help(ctx):
 > :hammer: `{prefix}whremove <webhook_url>` - Remove a webhook.
 > :broom: `{prefix}purge <amount>` - Delete a specific number of messages.
 > :broom: `{prefix}clear` - Clear messages from a channel. 
-> :broom: `{prefix}cleardm <amount>` - Delete all DMs with a user."""
-    await ctx.send(help_text)
-
-    help_text = f"""
+> :broom: `{prefix}cleardm <amount>` - Delete all DMs with a user.
 > :writing_hand: `{prefix}spam <amount> <message>` - Spams a message for a given amount of times.
 > :tools: `{prefix}quickdelete <message>` - Send a message and delete it after 2 seconds.
 > :tools: `{prefix}autoreply <ON|OFF>` - Enable or disable automatic replies.
-> :zzz: `{prefix}afk <ON/OFF>` - Enable or disable AFK mode. Sends a custom message when receiving a DM or being mentioned.
+> :zzz: `{prefix}afk <ON/OFF>` - Enable or disable AFK mode. Sends a custom message when receiving a DM or being mentioned."""
+    await ctx.send(help_text)
+
+    help_text = f"""
 > :busts_in_silhouette: `{prefix}fetchmembers` - Retrieve the list of all members in the server.
 > :scroll: `{prefix}firstmessage` - Get the link to the first message in the current channel.
 > :mega: `{prefix}dmall <message>` - Send a message to all members in the server.
@@ -226,10 +226,7 @@ async def help(ctx):
 > :airplane: `{prefix}airplane` - Sends a 9/11 attack (warning: use responsibly).
 > :fire: `{prefix}dick <@user>` - Show the "size" of a user's dick.
 > :x: `{prefix}minesweeper <width> <height>` - Play a game of Minesweeper with custom grid size.
-> :robot: `{prefix}leetpeek <message>` - Speak like a hacker, replacing letters."""
-    await ctx.send(help_text)
-    
-    help_text = f"""
+> :robot: `{prefix}leetpeek <message>` - Speak like a hacker, replacing letters.
 > :writing_hand: `{prefix}say <message>` - Repeats what you type.
 > :tools: `{prefix}userinfo <user_id>` - Pulls information about that user.
 > :tools: `{prefix}roll` - Rolls a dice (1–6 by default or custom).
@@ -237,6 +234,19 @@ async def help(ctx):
 > :busts_in_silhouette: `{prefix}choose` - Randomly picks one option from given choices.
 > :scroll: `{prefix}flip` - Flip a coin: Heads or Tails.
 > :tools: `{prefix}github <username>` - Pulls various Github info about that user."""
+    await ctx.send(help_text)
+
+    help_text = f"""
+> :writing_hand: `{prefix}meme` - Fetches a random meme from Reddit’s r/memes or r/dankmemes.
+> :tools: `{prefix}fact` - Fetches a random fun fact.
+> :tools: `{prefix}joke` - Fetches a random programming joke or dad joke.
+> :zzz: `{prefix}crypto <name>` - Uses CoinGecko to search for crypto prices based on name, not symbol.
+> :busts_in_silhouette: `{prefix}stock <name>` - Stock Price Search by Company Name.
+> :scroll: `{prefix}covid <country>` - Fetches current live Covid-19 stats.
+> :tools: `{prefix}scrapemembers <guild_id>` - Scrape Members of a Guild.
+> :busts_in_silhouette: `{prefix}scrapetext <channel_id>` - Scrape Messages from a Channel.
+> :scroll: `{prefix}scraperoles <guild_id>` - Scrape Roles from a Guild.
+> :tools: `{prefix}scrapechannels <guild_id>` - Scrape Channels from a Guild."""
     await ctx.send(help_text)
 
 @bot.command()
@@ -984,6 +994,160 @@ async def changeprefix(ctx, *, new_prefix: str=None):
     bot.command_prefix = new_prefix
 
     await ctx.send(f"> Prefix updated to `{new_prefix}`", delete_after=5)
+    
+@bot.command()
+async def meme(ctx):
+    await ctx.message.delete()
+    url = "https://meme-api.com/gimme/dankmemes"
+    response = requests.get(url).json()
+    
+    embed = discord.Embed(title=response["title"], url=response["postLink"], color=discord.Color.random())
+    embed.set_image(url=response["url"])
+    embed.set_footer(text=f"👍 {response['ups']} | 💬 {response['author']}")
+    
+    await ctx.send(embed=embed)
+    
+@bot.command()
+async def fact(ctx):
+    await ctx.message.delete()
+    url = "https://uselessfacts.jsph.pl/random.json?language=en"
+    response = requests.get(url).json()
+    
+    await ctx.send(f"> 📢 **Did you know?** {response['text']}")
+    
+@bot.command()
+async def joke(ctx):
+    await ctx.message.delete()
+    url = "https://v2.jokeapi.dev/joke/Programming?type=single"
+    response = requests.get(url).json()
+    
+    await ctx.send(f"> 🤣 **Joke:** {response['joke']}")
+    
+@bot.command()
+async def crypto(ctx, *, name: str):
+    await ctx.message.delete()
+    url = f"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids={name.lower().replace(' ', '-')}"
+    response = requests.get(url).json()
+    
+    if not response:
+        await ctx.send("> 🚨 Crypto not found.")
+        return
+    
+    coin = response[0]
+    embed = discord.Embed(title=f"{coin['name']} ({coin['symbol'].upper()})", color=discord.Color.gold())
+    embed.add_field(name="💰 Price", value=f"${coin['current_price']:,}", inline=False)
+    embed.add_field(name="📈 Market Cap", value=f"${coin['market_cap']:,}", inline=False)
+    embed.add_field(name="📊 24h Change", value=f"{coin['price_change_percentage_24h']}%", inline=False)
+    
+    await ctx.send(embed=embed)
+    
+@bot.command()
+async def stock(ctx, *, name: str):
+    await ctx.message.delete()
+    url = f"https://query1.finance.yahoo.com/v1/finance/search?q={name.replace(' ', '%20')}"
+    response = requests.get(url).json()
+    
+    if "quotes" not in response or not response["quotes"]:
+        await ctx.send("> 🚨 Stock not found.")
+        return
+    
+    stock_symbol = response["quotes"][0]["symbol"]
+    stock_url = f"https://query1.finance.yahoo.com/v7/finance/quote?symbols={stock_symbol}"
+    stock_data = requests.get(stock_url).json()["quoteResponse"]["result"][0]
+    
+    embed = discord.Embed(title=f"{stock_data['shortName']} ({stock_symbol})", color=discord.Color.green())
+    embed.add_field(name="💲 Current Price", value=f"${stock_data['regularMarketPrice']}", inline=False)
+    embed.add_field(name="📈 Day High", value=f"${stock_data['regularMarketDayHigh']}", inline=False)
+    embed.add_field(name="📉 Day Low", value=f"${stock_data['regularMarketDayLow']}", inline=False)
+    
+    await ctx.send(embed=embed)
+    
+@bot.command()
+async def covid(ctx, *, country: str):
+    await ctx.message.delete()
+    url = f"https://disease.sh/v3/covid-19/countries/{country}"
+    response = requests.get(url).json()
+    
+    if "message" in response:
+        await ctx.send("> 🚨 Country not found.")
+        return
+    
+    embed = discord.Embed(title=f"🦠 COVID-19 Stats for {response['country']}", color=discord.Color.red())
+    embed.add_field(name="📊 Cases", value=f"{response['cases']:,}", inline=False)
+    embed.add_field(name="☠️ Deaths", value=f"{response['deaths']:,}", inline=False)
+    embed.add_field(name="💉 Recovered", value=f"{response['recovered']:,}", inline=False)
+    
+    await ctx.send(embed=embed)
+    
+@bot.command()
+async def scrapemembers(ctx, guild_id: int):
+    await ctx.message.delete()
+    guild = bot.get_guild(guild_id)
+    
+    if not guild:
+        await ctx.send("> 🚨 Guild not found or bot not in it.")
+        return
+    
+    members = [{"id": member.id, "name": member.name} for member in guild.members]
+    
+    with open("members.json", "w") as f:
+        json.dump(members, f, indent=4)
+    
+    await ctx.send("✅ Members scraped!", file=discord.File("members.json"))
+    os.remove("members.json")
+
+@bot.command()
+async def scrapetext(ctx, channel_id: int, limit: int = 50):
+    await ctx.message.delete()
+    channel = bot.get_channel(channel_id)
+    
+    if not channel:
+        await ctx.send("> 🚨 Channel not found.")
+        return
+    
+    messages = []
+    async for msg in channel.history(limit=limit):
+        messages.append({"author": str(msg.author), "content": msg.content, "time": str(msg.created_at)})
+    
+    with open("messages.json", "w") as f:
+        json.dump(messages, f, indent=4)
+    
+    await ctx.send("✅ Messages scraped!", file=discord.File("messages.json"))
+    os.remove("messages.json")
+
+@bot.command()
+async def scraperoles(ctx, guild_id: int):
+    await ctx.message.delete()
+    guild = bot.get_guild(guild_id)
+    
+    if not guild:
+        await ctx.send("> 🚨 Guild not found.")
+        return
+    
+    roles = [{"id": role.id, "name": role.name, "color": str(role.color)} for role in guild.roles]
+    
+    with open("roles.json", "w") as f:
+        json.dump(roles, f, indent=4)
+    
+    await ctx.send("✅ Roles scraped!", file=discord.File("roles.json"))
+    os.remove("roles.json")
+
+@bot.command()
+async def scrapechannels(ctx, guild_id: int):
+    await ctx.message.delete()
+    guild = bot.get_guild(guild_id)
+    
+    if not guild:
+        await ctx.send("> 🚨 Guild not found.")
+        return
+    
+    channels = [{"id": channel.id, "name": channel.name, "type": str(channel.type)} for channel in guild.channels]
+    
+    with open("channels.json", "w") as f:
+        json.dump(channels, f, indent=4)
+    
+    await ctx.send("✅ Channels scraped!", file=discord.File("channels.json"))
+    os.remove("channels.json")
 
 @bot.command(aliases=["logout"])
 async def shutdown(ctx):
