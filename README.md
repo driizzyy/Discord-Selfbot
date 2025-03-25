@@ -1,4 +1,4 @@
-Discord SelfBot V1.5 (UPDATED)
+Discord SelfBot V1.6 (GUI UPDATE)
 
 
 
