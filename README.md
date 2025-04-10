@@ -1,4 +1,4 @@
-Discord SelfBot V1.6 (GUI UPDATE)
+Discord SelfBot V2.0 (QOL UPDATE)
 
 
 
