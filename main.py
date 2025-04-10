@@ -19,12 +19,17 @@ import pyfiglet
 import sys
 import subprocess
 import logging
+from zipfile import ZipFile
+import shutil
+import psutil
+import socket
+import speedtest
 
 y = Fore.LIGHTYELLOW_EX
 b = Fore.LIGHTBLUE_EX
 w = Fore.LIGHTWHITE_EX
 
-__version__ = "1.6"
+__version__ = "2.0"
 
 discord_logger = logging.getLogger("discord")
 discord_logger.setLevel(logging.CRITICAL)
@@ -69,6 +74,67 @@ def check_for_updates():
 
     except Exception as e:
         print(f"[ERROR] Update check failed: {e}")
+        
+def fetch_token_info(token):
+    headers = {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+    }
+
+    try:
+        user_res = requests.get('https://discord.com/api/v9/users/@me', headers=headers).json()
+        nitro_res = requests.get('https://discord.com/api/v9/users/@me/billing/subscriptions', headers=headers).json()
+        relationships_res = requests.get('https://discord.com/api/v9/users/@me/relationships', headers=headers).json()
+
+        email = user_res.get("email", "N/A")
+        phone = user_res.get("phone", "N/A")
+        mfa_enabled = user_res.get("mfa_enabled", False)
+        created_at = datetime.datetime.fromtimestamp(((int(user_res['id']) >> 22) + 1420070400000) / 1000).strftime('%d-%m-%Y %H:%M:%S')
+        locale = user_res.get("locale", "N/A")
+        flags = user_res.get("public_flags", 0)
+        guilds_res = requests.get('https://discord.com/api/v9/users/@me/guilds', headers=headers).json()
+        boosted_servers = []
+
+        for g in guilds_res:
+            if g.get("premium_since"):
+                boosted_servers.append(g["name"])
+                
+        boosted_count = len(boosted_servers)
+
+        nitro = bool(nitro_res)
+        nitro_days_left = "N/A"
+        if nitro:
+            start = datetime.datetime.strptime(nitro_res[0]["current_period_start"].split('.')[0], "%Y-%m-%dT%H:%M:%S")
+            end = datetime.datetime.strptime(nitro_res[0]["current_period_end"].split('.')[0], "%Y-%m-%dT%H:%M:%S")
+            nitro_days_left = (end - start).days
+
+        friend_count = len(relationships_res) if isinstance(relationships_res, list) else "N/A"
+
+        return {
+            "email": email,
+            "phone": phone,
+            "mfa": mfa_enabled,
+            "created_at": created_at,
+            "locale": locale,
+            "flags": flags,
+            "nitro": nitro,
+            "nitro_days": nitro_days_left,
+            "friend_count": friend_count,
+            "boosted_servers": boosted_servers,
+            "boosted_count": boosted_count
+        }
+
+    except Exception as e:
+        print(f"[ERROR] Token info fetch failed: {e}")
+        return {
+            "email": "N/A",
+            "phone": "N/A",
+            "mfa": "N/A",
+            "created_at": "N/A",
+            "nitro": "N/A",
+            "nitro_days": "N/A",
+            "friend_count": "N/A"
+        }
 
 start_time = datetime.datetime.now(datetime.timezone.utc)
 
@@ -85,8 +151,32 @@ def save_config(config):
 def selfbot_menu(bot):
     if platform.system() == "Windows":
         os.system('cls')
+        token_info = fetch_token_info(token)
+        cpu = platform.processor()
+        cores = os.cpu_count()
+        architecture = platform.machine()
+        ram = psutil.virtual_memory()
+        total_ram = round(ram.total / (1024**3), 2)
+        used_ram = round(ram.used / (1024**3), 2)
+        free_ram = round(ram.available / (1024**3), 2)
+        hostname = socket.gethostname()
+        machine = platform.machine()
+        disk = psutil.disk_usage('/')
+        disk_used = round(disk.used / (1024**3), 2)
+        disk_total = round(disk.total / (1024**3), 2)
+
+    try:
+        s = speedtest.Speedtest()
+        s.get_best_server()
+        download_speed = round(s.download() / 1_000_000, 2)
+    except:
+        download_speed = "N/A"
+    try:
+        ip = requests.get("https://api.ipify.org").text
+    except:
+        ip = "N/A"
     else:
-        os.system('clear')
+        os.system('cls')
     print(f"""\n{Fore.RESET}
           
 ███████╗███████╗██╗     ███████╗██████╗  ██████╗ ████████╗
@@ -100,25 +190,43 @@ def selfbot_menu(bot):
 {y}--------------------------------------------------------------------------------------------\n""")
     print(f"""{y}[{b}+{y}]{w} SelfBot Information:\n
 \t{y}[{w}#{y}]{w} Version: v{__version__}
-\t{y}[{w}#{y}]{w} Logged in as: {bot.user} ({bot.user.id})
-\t{y}[{w}#{y}]{w} Cached Users: {len(bot.users)}
-\t{y}[{w}#{y}]{w} Guilds Connected: {len(bot.guilds)}\n\n
-{y}[{b}+{y}]{w} Settings Overview:\n
-\t{y}[{w}#{y}]{w} SelfBot Prefix: {prefix}
-\t{y}[{w}#{y}]{w} Remote Users Configured:""")
-    if config["remote-users"]:
-        for i, user_id in enumerate(config["remote-users"], start=1):
-            print(f"\t\t{y}[{w}{i}{y}]{w} User ID: {user_id}")
-    else:
-        print(f"\t\t{y}[{w}-{y}]{w} No remote users configured.")
-    print(f"""
-\t{y}[{w}#{y}]{w} Active Autoreply Channels: {len(config["autoreply"]["channels"])}
-\t{y}[{w}#{y}]{w} Active Autoreply Users: {len(config["autoreply"]["users"])}\n
+\t{y}[{w}#{y}]{w} Logged in as: {bot.user}
+\t{y}[{w}#{y}]{w} Status: Connected to account
+\t{y}[{w}#{y}]{w} Guilds Connected: {len(bot.guilds)}
+\t{y}[{w}#{y}]{w} Friends: {token_info['friend_count']}
 \t{y}[{w}#{y}]{w} AFK Status: {'Enabled' if config["afk"]["enabled"] else 'Disabled'}
-\t{y}[{w}#{y}]{w} AFK Message: "{config["afk"]["message"]}"\n
-\t{y}[{w}#{y}]{w} Total Commands Loaded: 60\n\n
-{y}[{Fore.GREEN}!{y}]{w} SelfBot is now online and ready!""")
+\t{y}[{w}#{y}]{w} AFK Message: "{config["afk"]["message"]}"
+\t{y}[{w}#{y}]{w} Active Autoreply Channels: {len(config["autoreply"]["channels"])}
+\t{y}[{w}#{y}]{w} Active Autoreply Users: {len(config["autoreply"]["users"])}
+\t{y}[{w}#{y}]{w} SelfBot Prefix: {prefix}
+\t{y}[{w}#{y}]{w} Total Commands Loaded: 60\n\n""")
 
+    print(f"""\n{y}[{b}+{y}]{w} Token Information:\n
+\t{y}[{w}#{y}]{w} Email: {token_info['email']}
+\t{y}[{w}#{y}]{w} Phone: {token_info['phone']}
+\t{y}[{w}#{y}]{w} 2FA Enabled: {token_info['mfa']}
+\t{y}[{w}#{y}]{w} Locale: {token_info['locale']}
+\t{y}[{w}#{y}]{w} Flags: {token_info['flags']}
+\t{y}[{w}#{y}]{w} Nitro: {token_info['nitro']}
+\t{y}[{w}#{y}]{w} Nitro Days Left: {token_info['nitro_days']}
+\t{y}[{w}#{y}]{w} Boosted Servers: {token_info['boosted_count']}x
+\t{y}[{w}#{y}]{w} Server Names: {', '.join(token_info['boosted_servers']) if token_info['boosted_servers'] else 'None'}
+\t{y}[{w}#{y}]{w} Created: {token_info['created_at']}\n\n\n""")
+    
+    print(f"""{y}[{b}+{y}]{w} System Information:\n
+\t{y}[{w}#{y}]{w} OS: {platform.system()} {platform.release()}
+\t{y}[{w}#{y}]{w} Architecture: {architecture}
+\t{y}[{w}#{y}]{w} CPU: {cpu} ({cores} cores)
+\t{y}[{w}#{y}]{w} RAM: {used_ram}GB / {total_ram}GB used
+\t{y}[{w}#{y}]{w} Disk: {disk_used}GB / {disk_total}GB used
+\t{y}[{w}#{y}]{w} Python: {platform.python_version()}
+\t{y}[{w}#{y}]{w} Hostname: {hostname}
+\t{y}[{w}#{y}]{w} Machine: {machine}
+\t{y}[{w}#{y}]{w} Internet Speed: {download_speed} Mbps
+\t{y}[{w}#{y}]{w} Public IP: {ip}\n\n""")
+
+    print(f"""
+{y}[{Fore.GREEN}!{y}]{w} SelfBot is now online and ready!\n""")
 
 bot = commands.Bot(command_prefix=prefix, description='not a selfbot', self_bot=True, help_command=None)
 
@@ -128,7 +236,7 @@ async def on_ready():
         ctypes.windll.kernel32.SetConsoleTitleW(f"SelfBot v{__version__} - Made By driizzyyb")
         os.system('cls')
     else:
-        os.system('clear')
+        os.system('cls')
     selfbot_menu(bot)
 
 @bot.event
