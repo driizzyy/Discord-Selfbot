@@ -29,7 +29,7 @@ y = Fore.LIGHTYELLOW_EX
 b = Fore.LIGHTBLUE_EX
 w = Fore.LIGHTWHITE_EX
 
-__version__ = "2.0"
+__version__ = "2.2"
 
 discord_logger = logging.getLogger("discord")
 discord_logger.setLevel(logging.CRITICAL)
@@ -196,8 +196,6 @@ def selfbot_menu(bot):
 \t{y}[{w}#{y}]{w} Friends: {token_info['friend_count']}
 \t{y}[{w}#{y}]{w} AFK Status: {'Enabled' if config["afk"]["enabled"] else 'Disabled'}
 \t{y}[{w}#{y}]{w} AFK Message: "{config["afk"]["message"]}"
-\t{y}[{w}#{y}]{w} Active Autoreply Channels: {len(config["autoreply"]["channels"])}
-\t{y}[{w}#{y}]{w} Active Autoreply Users: {len(config["autoreply"]["users"])}
 \t{y}[{w}#{y}]{w} SelfBot Prefix: {prefix}
 \t{y}[{w}#{y}]{w} Total Commands Loaded: 60\n\n""")
 
@@ -479,7 +477,7 @@ async def astraa(ctx):
     await ctx.message.delete()
 
     embed = f"""**MY SOCIAL NETWORKS | Prefix: `{prefix}`**\n
-    > :pager: `Discord Server`\n*https://discord.gg/driizzyyboosts*
+    > :pager: `Discord Server`\n*https://discord.gg/N99dWHJTXB*
     > :computer: `GitHub Page`\n*https://github.com/driizzyy*
     > :robot: `SelfBot Project`\n*https://github.com/driizzyy/Discord-Selfbot*"""
 
@@ -528,7 +526,7 @@ async def tts(ctx, *, content: str=None):
     await ctx.send(file=discord.File(f, f"{content[:10]}.wav"))
 
 @bot.command(aliases=['qrcode'])
-async def qr(ctx, *, text: str="https://discord.gg/driizzyyboosts"):
+async def qr(ctx, *, text: str="https://discord.gg/N99dWHJTXB"):
     qr = qrcode.make(text)
     
     img_byte_arr = io.BytesIO()
@@ -922,7 +920,7 @@ async def fetchmembers(ctx):
     os.remove("members_list.json")
 
 @bot.command()
-async def spam(ctx, amount: int=1, *, message_to_send: str="https://discord.gg/driizzyyboosts"):
+async def spam(ctx, amount: int=1, *, message_to_send: str="https://discord.gg/N99dWHJTXB"):
     await ctx.message.delete()
 
     try:
@@ -1274,7 +1272,7 @@ async def clear(ctx):
     await ctx.send('ﾠﾠ' + '\n' * 200 + 'ﾠﾠ')
 
 @bot.command()
-async def sendall(ctx, *, message="https://discord.gg/driizzyyboosts"):
+async def sendall(ctx, *, message="https://discord.gg/N99dWHJTXB"):
     await ctx.message.delete()
     
     if not ctx.guild:
@@ -1384,7 +1382,7 @@ async def stopactivity(ctx):
     await bot.change_presence(activity=None, status=discord.Status.dnd)
 
 @bot.command()
-async def dmall(ctx, *, message: str="https://discord.gg/driizzyyboosts"):
+async def dmall(ctx, *, message: str="https://discord.gg/N99dWHJTXB"):
     await ctx.message.delete()
     
     if not ctx.guild:
@@ -1410,6 +1408,7 @@ async def dmall(ctx, *, message: str="https://discord.gg/driizzyyboosts"):
         await asyncio.sleep(random.uniform(3, 6))
 
     await ctx.send(f"> **[**INFO**]**: DM process completed.\n> Successfully sent: `{success_count}`\n> Failed: `{fail_count}`", delete_after=10)
+
 
 check_for_updates()
 bot.run(token)

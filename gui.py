@@ -152,7 +152,7 @@ def set_prefix():
     print("Set prefix config opened!")
 
 root = tk.Tk()
-root.title("𝔻𝕣𝕚𝕚𝕫𝕫𝕪𝕪𝕤 𝔻𝕚𝕤𝕔𝕠𝕣𝕕 𝕊𝕖𝕝𝕗𝕓𝕠𝕥 𝕍𝟙.𝟝.𝟘")
+root.title("Driizzyys Discord SelfBot V2.2")
 root.geometry("620x400")
 root.resizable(False, False)
 root.configure(bg="red")

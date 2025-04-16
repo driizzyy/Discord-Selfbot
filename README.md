@@ -1,4 +1,4 @@
-Discord SelfBot V2.0 (QOL UPDATE)
+Discord SelfBot V2.2 (SMALL FIX UPDATE)
 
 
 
@@ -86,7 +86,7 @@ This SelfBot provides a large variety of commands to streamline your Discord exp
     // List of messages that the bot will use to auto-reply
     "messages": [
       "https://github.com/driizzyy",
-      "https://discord.gg/driizzyyboosts"
+      "https://discord.gg/N99dWHJTXB"
     ],
     // Channels where the bot will enable auto-reply functionality
     "channels": ["CHANNEL-ID-1", "CHANNEL-ID-2"],
@@ -147,7 +147,7 @@ Messages, channels, and users for autoreply are stored in `config/config.json`:
 {
   "messages": [
     "https://github.com/driizzyy",
-    "https://discord.gg/driizzyyboosts"
+    "https://discord.gg/N99dWHJTXB"
   ],
   "channels": ["123456789012345678"],
   "users": ["112233445566778899"]
@@ -157,7 +157,7 @@ Messages, channels, and users for autoreply are stored in `config/config.json`:
 ---
 
 ## Additional Information
-- Need help? Join the [Discord Server](https://discord.gg/driizzyyboosts).
+- Need help? Join the [Discord Server](https://discord.gg/N99dWHJTXB).
 - Contributions are welcome! Open an issue or create a pull request.
 
 ---
