@@ -3,3 +3,5 @@ colorama
 gtts
 qrcode
 pyfiglet
+psutil
+speedtest
