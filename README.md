@@ -168,4 +168,5 @@ This project is a restructured and improved version of the original [@humza1400]
 This project is another restructured and improved version of the previously improved version [@AstraaDev](https://github.com/AstraaDev) SelfBot (2024).
 
 ## Contributors
-Big thanks to [@DevDevil-C137](https://github.com/DevDevil-C137) for the GUI!
+Big thanks to [@DevDevil-C137](https://github.com/DevDevil-C137) for the GUI! If you wanna use the GUI (off by default), please open the start.bat file with notepad 
+and change the "main.py" to "gui.py" and save.
