@@ -1,6 +1,7 @@
 {
     "token": "USER_TOKEN_HERE",
     "prefix": "PREFIX_HERE",
+    "dashboard_password": "SET_PASSWORD_HERE",
     "remote-users": ["USER_ID_HERE"],
     "autoreply": {
         "messages": [
