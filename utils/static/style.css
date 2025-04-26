@@ -1,0 +1,76 @@
+body {
+    background-color: #0d0d0d;
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.login-container, .dashboard-container {
+    background: #1a1a1a;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #00ff00;
+    text-align: center;
+    width: 95%;
+    max-width: 1400px;
+    margin: 40px auto;
+}
+
+input[type="password"] {
+    padding: 10px;
+    margin: 15px 0;
+    width: 80%;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background: #333;
+    color: #00ff00;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    background: #00ff00;
+    color: #0d0d0d;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #00cc00;
+}
+
+pre.log-box {
+    background: #000;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    height: 70vh;
+    width: 100%;
+    max-width: 1200px;
+    overflow-y: scroll;
+    text-align: left;
+    white-space: pre-wrap;
+    font-size: 14px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+.buttons {
+    margin-bottom: 20px;
+}

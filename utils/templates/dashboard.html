@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SelfBot Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        async function fetchLogs() {
+            const logContainer = document.getElementById('log-container');
+            logContainer.innerText = "Loading logs...";
+            try {
+                const response = await fetch('/api/logs');
+                const data = await response.json();
+                logContainer.innerText = data.join('\n');
+            } catch (error) {
+                logContainer.innerText = "Failed to load logs.";
+            }
+        }
+    
+        async function clearLogs() {
+            await fetch('/api/clear', { method: 'POST' });
+            fetchLogs();
+        }
+    
+        function exportLogs() {
+            window.location.href = '/api/export';
+        }
+    
+        setInterval(fetchLogs, 2000);
+        window.onload = fetchLogs;
+    </script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>📜 Driizzyy Selfbot Web Dashboard</h1>
+        <div class="buttons">
+            <button onclick="fetchLogs()">🔄 Refresh Logs</button>
+            <button onclick="clearLogs()">🧹 Clear Logs</button>
+            <button onclick="exportLogs()">💾 Export Logs</button>
+            <a href="/logout"><button>🚪 Logout</button></a>
+        </div>
+        <pre id="log-container" class="log-box"></pre>
+    </div>
+</body>
+</html>

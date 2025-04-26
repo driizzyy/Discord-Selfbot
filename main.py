@@ -1,3 +1,6 @@
+import logging
+logging.basicConfig(level=logging.CRITICAL)
+
 import discord
 from discord.ext import commands
 import ctypes
@@ -18,26 +21,25 @@ import qrcode
 import pyfiglet
 import sys
 import subprocess
-import logging
 from zipfile import ZipFile
 import shutil
 import psutil
 import socket
 import speedtest
+import webbrowser
+from config.version import __version__
+from utils.web import start_web_server, hijack_print
 
 y = Fore.LIGHTYELLOW_EX
 b = Fore.LIGHTBLUE_EX
 w = Fore.LIGHTWHITE_EX
 
-__version__ = "2.2"
-
-discord_logger = logging.getLogger("discord")
-discord_logger.setLevel(logging.CRITICAL)
-
-for handler in discord_logger.handlers[:]:
-    discord_logger.removeHandler(handler)
-
-logging.getLogger("asyncio").setLevel(logging.CRITICAL)
+for logger_name in ("discord", "asyncio", "websockets"):
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.CRITICAL)
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
+logging.getLogger().setLevel(logging.CRITICAL)
 
 def check_for_updates():
     print("[UPDATE CHECK] Scanning GitHub for updates...")
@@ -138,6 +140,29 @@ def fetch_token_info(token):
 
 start_time = datetime.datetime.now(datetime.timezone.utc)
 
+def validate_token():
+    global token
+
+    headers = {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+    }
+    response = requests.get('https://discord.com/api/v9/users/@me', headers=headers)
+
+    if response.status_code == 200:
+        print("[✅] Token is valid. Starting Selfbot...")
+    else:
+        print("[❌] Invalid Token detected. Please provide a new token.")
+        new_token = input("Enter your new Discord token: ").strip()
+
+        config['token'] = new_token
+        save_config(config)
+
+        token = new_token
+
+        print("[🔄] Token updated in config. Continuing startup...")
+        validate_token()
+
 with open("config/config.json", "r") as file:
     config = json.load(file)
     token = config.get("token")
@@ -190,6 +215,7 @@ def selfbot_menu(bot):
 {y}--------------------------------------------------------------------------------------------\n""")
     print(f"""{y}[{b}+{y}]{w} SelfBot Information:\n
 \t{y}[{w}#{y}]{w} Version: v{__version__}
+\t{y}[{w}#{y}]{w} Web Dashboard: http://127.0.0.1:5000
 \t{y}[{w}#{y}]{w} Logged in as: {bot.user}
 \t{y}[{w}#{y}]{w} Status: Connected to account
 \t{y}[{w}#{y}]{w} Guilds Connected: {len(bot.guilds)}
@@ -1410,5 +1436,15 @@ async def dmall(ctx, *, message: str="https://discord.gg/N99dWHJTXB"):
     await ctx.send(f"> **[**INFO**]**: DM process completed.\n> Successfully sent: `{success_count}`\n> Failed: `{fail_count}`", delete_after=10)
 
 
+start_web_server()
+hijack_print()
+webbrowser.open("http://127.0.0.1:5000/discord-selfbot")
 check_for_updates()
+validate_token()
+
+for name in logging.root.manager.loggerDict:
+    if "discord" in name or "asyncio" in name or "websockets" in name:
+        logging.getLogger(name).setLevel(logging.CRITICAL)
+logging.getLogger().setLevel(logging.CRITICAL)
+
 bot.run(token)
