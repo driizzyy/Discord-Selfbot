@@ -1,4 +1,4 @@
-Discord SelfBot V2.2 (SMALL FIX UPDATE)
+Discord SelfBot V3.0 (WEB DASHBOARD UPDATE)
 
 
 
