@@ -44,14 +44,14 @@ def check_for_updates():
     print("[UPDATE CHECK] Scanning GitHub repo for updates...")
     repo_user = "driizzyy"
     repo_name = "Discord-Selfbot"
-    version_url = f"https://raw.githubusercontent.com/{repo_user}/{repo_name}/main/config/version.txt"
+    version_url = f"https://raw.githubusercontent.com/{repo_user}/{repo_name}/main/config/version.py"
 
     try:
         response = requests.get(version_url)
         if response.status_code == 200:
             remote_code = response.text
             import re
-            match = re.search(r'__version__\s*=\s*["\']([\d\.]+)["\']', remote_code)
+            match = re.search(r'__version__\s*=\s*[\'"]([^\'"]+)[\'"]', remote_code)
             if match:
                 remote_version = match.group(1)
                 print(f"[UPDATE CHECK] Remote version: v{remote_version} | Current version: v{__version__}")
@@ -60,10 +60,7 @@ def check_for_updates():
                     choice = input(f"🔎 Update v{remote_version} is available! Update now? (Y/N): ").strip().lower()
                     if choice == 'y':
                         print("Downloading latest version...")
-                        with open("main.py", "w", encoding="utf-8") as f:
-                            f.write(remote_code)
-                        print("✅ Update applied! Restarting selfbot...")
-                        os.execv(sys.executable, ['python'] + sys.argv)
+                        print("✅ Please update manually from GitHub (automatic updates are disabled for security).")
                     else:
                         print("Skipping update.")
                 else:
@@ -71,7 +68,7 @@ def check_for_updates():
             else:
                 print("[ERROR] Could not find version info in remote file.")
         else:
-            print("[ERROR] Failed to check GitHub for updates.")
+            print("[ERROR] Failed to check GitHub for updates. (status {})".format(response.status_code))
 
     except Exception as e:
         print(f"[ERROR] Update check failed: {e}")
