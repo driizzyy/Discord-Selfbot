@@ -1,6 +1,5 @@
 import logging
 logging.basicConfig(level=logging.CRITICAL)
-
 import discord
 from discord.ext import commands
 import ctypes
@@ -42,7 +41,7 @@ for logger_name in ("discord", "asyncio", "websockets"):
 logging.getLogger().setLevel(logging.CRITICAL)
 
 def check_for_updates():
-    print("[UPDATE CHECK] Scanning GitHub for updates...")
+    print("[UPDATE CHECK] Scanning GitHub repo for updates...")
     repo_user = "driizzyy"
     repo_name = "Discord-Selfbot"
     version_url = f"https://raw.githubusercontent.com/{repo_user}/{repo_name}/main/main.py"
@@ -153,7 +152,7 @@ def validate_token():
         print("[✅] Token is valid. Starting Selfbot...")
     else:
         print("[❌] Invalid Token detected. Please provide a new token.")
-        new_token = input("Enter your new Discord token: ").strip()
+        new_token = input("Enter your new Discord User Token: ").strip()
 
         config['token'] = new_token
         save_config(config)
@@ -209,7 +208,7 @@ def selfbot_menu(bot):
 ███████╗█████╗  ██║     █████╗  ██████╔╝██║   ██║   ██║
 ╚════██║██╔══╝  ██║     ██╔══╝  ██╔══██╗██║   ██║   ██║
 ███████║███████╗███████╗██║     ██████╔╝╚██████╔╝   ██║
-╚══════╝╚══════╝╚══════╝╚═╝     ╚═════╝  ╚═════╝    ╚═╝\n""".replace('█', f'{b}█{y}'))
+╚══════╝╚══════╝╚══════╝╚═╝     ╚═════╝  ╚═════╝    ╚═╝ v{__version__}\n""".replace('█', f'{b}█{y}'))
     print(f"""{y}--------------------------------------------------------------------------------------------
 {w}driizzyyb {b}|{w} https://github.com/driizzyy/Discord-Selfbot {b}|{w} https://discord.gg/driizzyyboosts
 {y}--------------------------------------------------------------------------------------------\n""")
@@ -217,7 +216,7 @@ def selfbot_menu(bot):
 \t{y}[{w}#{y}]{w} Version: v{__version__}
 \t{y}[{w}#{y}]{w} Web Dashboard: http://127.0.0.1:5000
 \t{y}[{w}#{y}]{w} Logged in as: {bot.user}
-\t{y}[{w}#{y}]{w} Status: Connected to account
+\t{y}[{w}#{y}]{w} Status: Connected!
 \t{y}[{w}#{y}]{w} Guilds Connected: {len(bot.guilds)}
 \t{y}[{w}#{y}]{w} Friends: {token_info['friend_count']}
 \t{y}[{w}#{y}]{w} AFK Status: {'Enabled' if config["afk"]["enabled"] else 'Disabled'}

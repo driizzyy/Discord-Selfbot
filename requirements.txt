@@ -5,3 +5,4 @@ qrcode
 pyfiglet
 psutil
 speedtest
+webbrowser
