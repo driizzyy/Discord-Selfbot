@@ -44,7 +44,7 @@ def check_for_updates():
     print("[UPDATE CHECK] Scanning GitHub repo for updates...")
     repo_user = "driizzyy"
     repo_name = "Discord-Selfbot"
-    version_url = f"https://raw.githubusercontent.com/{repo_user}/{repo_name}/main/main.py"
+    version_url = f"https://raw.githubusercontent.com/{repo_user}/{repo_name}/main/config/version.txt"
 
     try:
         response = requests.get(version_url)
@@ -256,7 +256,7 @@ bot = commands.Bot(command_prefix=prefix, description='not a selfbot', self_bot=
 @bot.event
 async def on_ready():
     if platform.system() == "Windows":
-        ctypes.windll.kernel32.SetConsoleTitleW(f"SelfBot v{__version__} - Made By driizzyyb")
+        ctypes.windll.kernel32.SetConsoleTitleW(f"Discord Selfbot - Made By driizzyyb")
         os.system('cls')
     else:
         os.system('cls')
