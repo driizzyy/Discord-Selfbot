@@ -26,6 +26,7 @@ import psutil
 import socket
 import speedtest
 import webbrowser
+import importlib.util
 from config.version import __version__
 from utils.web import start_web_server, hijack_print
 
@@ -164,6 +165,25 @@ with open("config/config.json", "r") as file:
     token = config.get("token")
     prefix = config.get("prefix")
     message_generator = itertools.cycle(config["autoreply"]["messages"])
+    
+def load_custom_scripts(bot):
+    scripts_loaded = 0
+    scripts_path = "scripts"
+
+    if not os.path.exists(scripts_path):
+        os.makedirs(scripts_path)
+
+    for filename in os.listdir(scripts_path):
+        if filename.endswith(".py"):
+            filepath = os.path.join(scripts_path, filename)
+            spec = importlib.util.spec_from_file_location(filename[:-3], filepath)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            if hasattr(module, "setup"):
+                module.setup(bot)
+                scripts_loaded += 1
+
+    return scripts_loaded
 
 def save_config(config):
     with open("config/config.json", "w") as file:
@@ -219,7 +239,8 @@ def selfbot_menu(bot):
 \t{y}[{w}#{y}]{w} AFK Status: {'Enabled' if config["afk"]["enabled"] else 'Disabled'}
 \t{y}[{w}#{y}]{w} AFK Message: "{config["afk"]["message"]}"
 \t{y}[{w}#{y}]{w} SelfBot Prefix: {prefix}
-\t{y}[{w}#{y}]{w} Total Commands Loaded: 60\n\n""")
+\t{y}[{w}#{y}]{w} Total Commands Loaded: 60
+\t{y}[{w}#{y}]{w} Custom Scripts Loaded: {custom_scripts_loaded}\n\n""")
 
     print(f"""\n{y}[{b}+{y}]{w} Token Information:\n
 \t{y}[{w}#{y}]{w} Email: {token_info['email']}
@@ -1437,6 +1458,7 @@ hijack_print()
 webbrowser.open("http://127.0.0.1:5000/discord-selfbot")
 check_for_updates()
 validate_token()
+custom_scripts_loaded = load_custom_scripts(bot)
 
 for name in logging.root.manager.loggerDict:
     if "discord" in name or "asyncio" in name or "websockets" in name:
