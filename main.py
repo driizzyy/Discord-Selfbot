@@ -227,7 +227,7 @@ def selfbot_menu(bot):
 ███████║███████╗███████╗██║     ██████╔╝╚██████╔╝   ██║
 ╚══════╝╚══════╝╚══════╝╚═╝     ╚═════╝  ╚═════╝    ╚═╝ v{__version__}\n""".replace('█', f'{b}█{y}'))
     print(f"""{y}--------------------------------------------------------------------------------------------
-{w}driizzyyb {b}|{w} https://github.com/driizzyy/Discord-Selfbot {b}|{w} https://discord.gg/driizzyyboosts
+{w}driizzyyb {b}|{w} https://github.com/driizzyy/Discord-Selfbot {b}|{w} https://discord.gg/N99dWHJTXB
 {y}--------------------------------------------------------------------------------------------\n""")
     print(f"""{y}[{b}+{y}]{w} SelfBot Information:\n
 \t{y}[{w}#{y}]{w} Version: v{__version__}
