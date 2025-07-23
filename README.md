@@ -158,6 +158,7 @@ Messages, channels, and users for autoreply are stored in `config/config.json`:
 
 ## Additional Information
 - Need help? Join the [Discord Server](https://discord.gg/N99dWHJTXB).
+- Temporary Discord Link: https://discord.gg/uJp8R66SUS
 - Contributions are welcome! Open an issue or create a pull request.
 
 ---
